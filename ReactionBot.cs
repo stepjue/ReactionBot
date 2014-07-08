@@ -54,8 +54,7 @@ namespace ReactionBot
         public TwitterStatus reactToTweet(TwitterStatus tweet, string gif)
         {
             string user = "@" + tweet.User.ScreenName;
-            Console.WriteLine(tweet.Id);
-            var options = new SendTweetOptions { Status = user + " " + gif, InReplyToStatusId = tweet.Id};
+            var options = new SendTweetOptions { Status = user + " " + gif, InReplyToStatusId = tweet.Id };
             return service.SendTweet(options);
         }
 
@@ -63,11 +62,30 @@ namespace ReactionBot
         {
             var tweet = randomTweet();
             string gif = getRandomReaction();
-
-            System.Console.WriteLine(tweet.Text);
-            System.Console.WriteLine(gif);
-
             var reply = reactToTweet(tweet, gif);
+
+            string dateTime = DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToShortTimeString();
+
+            appendToLog(dateTime, tweet.Text, reply.Text);
+        }
+
+        public void appendToLog(string dateTime, string tweet, string reply)
+        {
+            string path = @ConfigurationManager.AppSettings["logFile"];
+            StreamWriter sw;
+            if(!File.Exists(path))
+            {
+                sw = File.CreateText(path);
+            }
+            else
+            {
+                sw = File.AppendText(path);
+            }
+            sw.WriteLine(dateTime);
+            sw.WriteLine(tweet);
+            sw.WriteLine(reply);
+            sw.WriteLine();
+            sw.Close();
         }
 
         #endregion

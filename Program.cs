@@ -13,6 +13,12 @@ namespace ReactionBot
         {
             var bot = new ReactionBot();
             bot.run();
+            appendToLog();
+        }
+
+        static void appendToLog()
+        {
+
         }
     }
 }
